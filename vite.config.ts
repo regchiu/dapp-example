@@ -13,4 +13,5 @@ export default defineConfig({
       web3: path.resolve(__dirname, './node_modules/web3/dist/web3.min.js'),
     },
   },
+  base: process.env.NODE_ENV === 'production' ? '/dapp-example/' : '/',
 })

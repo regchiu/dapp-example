@@ -11,7 +11,10 @@ const chainId: Ref<number> = ref(0)
 const balance: Ref<string> = ref('')
 const chains: Ref<any[]> = ref([])
 
-const networkSymbol: ComputedRef<any> = computed(
+const chain: ComputedRef<string> = computed(
+  () => chains.value.find((chain) => chain.chainId === chainId.value)?.chain ?? 'unknown chain'
+)
+const networkSymbol: ComputedRef<string> = computed(
   () => chains.value.find((chain) => chain.chainId === chainId.value)?.nativeCurrency?.symbol ?? 'unknown symbol'
 )
 
@@ -40,6 +43,7 @@ async function connectWallet() {
 async function fetchChains() {
   try {
     const { data } = await axios.get('https://chainid.network/chains.json')
+    console.log(data)
     chains.value = data
   } catch (error) {
     console.log(error)
@@ -51,7 +55,7 @@ async function fetchChains() {
   <button v-if="isMetaMaskInstalled" class="btn" @click="connectWallet">Connect MetaMask</button>
   <h1 v-else>Install MetaMask extension please.</h1>
   <div class="banner" v-if="chainId">
-    <strong>Chain ID: </strong><span>{{ chainId }}</span>
+    <strong>Chain ID: </strong><span>{{ chainId }}({{ chain }})</span>
   </div>
   <div class="banner" v-if="account">
     <strong>Account: </strong><span>{{ account }}</span>
